@@ -1,4 +1,4 @@
-BuzzIO.csproj.user
-BuzzIO.suo
+*.csproj.user
+*.suo
 bin
 obj

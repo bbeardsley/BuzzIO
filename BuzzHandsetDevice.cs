@@ -12,7 +12,13 @@ namespace BuzzWin
 		/// <summary>
 		/// Event fired when one or more button state changes
 		/// </summary>
-		public event BuzzButtonChangedEventHandler OnButtonChanged;
+		public event BuzzButtonChangedEventHandler ButtonChanged;
+        protected virtual void OnButtonChanged(BuzzButtonChangedEventArgs e)
+        {
+            if (ButtonChanged != null)
+                ButtonChanged(this, e);
+        }
+
 		/// <summary>
 		/// Creates an input report for use in the HID device framework
 		/// </summary>
@@ -82,13 +88,9 @@ namespace BuzzWin
 		/// <param name="oInRep">Input report received</param>
 		protected override void HandleDataReceived(InputReport oInRep)
 		{
-			// Fire the event handler if assigned
-			if (OnButtonChanged != null)
-			{
-				BuzzInputReport oBuzIn = (BuzzInputReport)oInRep;
-				OnButtonChanged(this, new BuzzButtonChangedEventArgs(oBuzIn.Buttons));
-			}
+            OnButtonChanged(new BuzzButtonChangedEventArgs(((BuzzInputReport)oInRep).Buttons));
 		}
+
 		/// <summary>
 		/// Dispose.
 		/// </summary>

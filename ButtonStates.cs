@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 
 namespace BuzzWin
 {
@@ -21,6 +22,47 @@ namespace BuzzWin
         public bool Any
         {
             get { return Red || Blue || Orange || Green || Yellow; }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            if (Red)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append("Red");
+            }
+
+            if (Blue)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append("Blue");
+            }
+
+            if (Orange)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append("Orange");
+            }
+
+            if (Green)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append("Green");
+            }
+
+            if (Yellow)
+            {
+                if (sb.Length > 0)
+                    sb.Append(", ");
+                sb.Append("Yellow");
+            }
+
+            return sb.ToString();
         }
 	}
 }

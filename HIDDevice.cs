@@ -124,10 +124,7 @@ namespace BuzzWin
             catch(IOException)	// if we got an IO exception, the device was removed
             {
                 HandleDeviceRemoved();
-                if (OnDeviceRemoved != null)
-                {
-                    OnDeviceRemoved(this, new EventArgs());
-                }
+                OnDeviceRemoved(EventArgs.Empty);
                 Dispose();
             }
         }
@@ -269,7 +266,13 @@ namespace BuzzWin
 		/// <summary>
 		/// Event handler called when device has been removed
 		/// </summary>
-		public event EventHandler OnDeviceRemoved;
+		public event EventHandler DeviceRemoved;
+        protected virtual void OnDeviceRemoved(EventArgs e)
+        {
+            if (DeviceRemoved != null)
+                DeviceRemoved(this, e);
+        }
+
 		/// <summary>
 		/// Accessor for output report length
 		/// </summary>
