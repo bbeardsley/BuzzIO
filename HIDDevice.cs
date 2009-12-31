@@ -1,24 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Runtime.InteropServices;
 
 namespace BuzzWin
 {
-	#region Custom exception
-	/// <summary>
-	/// Generic HID device exception
-	/// </summary>
-    public class HIDDeviceException : ApplicationException
-    {
-        public HIDDeviceException(string strMessage) : base(strMessage) { }
-
-        public static HIDDeviceException GenerateWithWinError(string strMessage)
-        {
-            return new HIDDeviceException(string.Format("Msg:{0} WinEr:{1:X8}", strMessage, Marshal.GetLastWin32Error()));
-        }
-    }
-	#endregion
 	/// <summary>
 	/// Abstract HID device : Derive your new device controller class from this
 	/// </summary>
@@ -135,7 +121,7 @@ namespace BuzzWin
                     BeginAsyncRead();	// when all that is done, kick off another read for the next report
                 }                
             }
-            catch(IOException ex)	// if we got an IO exception, the device was removed
+            catch(IOException)	// if we got an IO exception, the device was removed
             {
                 HandleDeviceRemoved();
                 if (OnDeviceRemoved != null)
@@ -155,7 +141,7 @@ namespace BuzzWin
 			{
 				m_oFile.Write(oOutRep.Buffer, 0, oOutRep.BufferLength);
 			}
-			catch(IOException ex)
+			catch(IOException)
 			{
 				// The device was removed!
 				throw new HIDDeviceException("Device was removed");
@@ -219,8 +205,7 @@ namespace BuzzWin
                 oInterface.Size = Marshal.SizeOf(oInterface);
 				// Now iterate through the InfoSet memory block assigned within Windows in the call to SetupDiGetClassDevs
 				// to get device details for each device connected
-				int nIndex = 0;
-				while (SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)nIndex, ref oInterface))	// this gets the device interface information for a device at index 'nIndex' in the memory block
+                for (int i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'i' in the memory block
                 {
                     string strDevicePath = GetDevicePath(hInfoSet, ref oInterface);	// get the device path (see helper method 'GetDevicePath')
                     if (strDevicePath.IndexOf(strSearch) >= 0)	// do a string search, if we find the VID/PID string then we found our device!
@@ -229,7 +214,6 @@ namespace BuzzWin
                         oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
                         return oNewDevice;	// and return it
                     }
-                    nIndex++;	// if we get here, we didn't find our device. So move on to the next one.
                 }
             }
             finally
@@ -239,6 +223,46 @@ namespace BuzzWin
             }
             return null;	// oops, didn't find our device
         }
+
+        public static List<HIDDevice> FindDevices(int nVid, int nPid, Type oType)
+        {
+            List<HIDDevice> list = new List<HIDDevice>();
+            string strPath = string.Empty;
+            string strSearch = string.Format("vid_{0:x4}&pid_{1:x4}", nVid, nPid); // first, build the path search string
+            Guid gHid;
+            HidD_GetHidGuid(out gHid);	// next, get the GUID from Windows that it uses to represent the HID USB interface
+            IntPtr hInfoSet = SetupDiGetClassDevs(ref gHid, null, IntPtr.Zero, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);	// this gets a list of all HID devices currently connected to the computer (InfoSet)
+            try
+            {
+                DeviceInterfaceData oInterface = new DeviceInterfaceData();	// build up a device interface data block
+                oInterface.Size = Marshal.SizeOf(oInterface);
+                // Now iterate through the InfoSet memory block assigned within Windows in the call to SetupDiGetClassDevs
+                // to get device details for each device connected
+                for (int i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'nIndex' in the memory block
+                {
+                    string strDevicePath = GetDevicePath(hInfoSet, ref oInterface);	// get the device path (see helper method 'GetDevicePath')
+                    if (strDevicePath.IndexOf(strSearch) >= 0)	// do a string search, if we find the VID/PID string then we found our device!
+                    {
+                        HIDDevice oNewDevice = (HIDDevice)Activator.CreateInstance(oType);	// create an instance of the class for this device
+                        try
+                        {
+                            oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
+                            list.Add(oNewDevice);
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                // Before we go, we have to free up the InfoSet memory reserved by SetupDiGetClassDevs
+                SetupDiDestroyDeviceInfoList(hInfoSet);
+            }
+            return list;
+        }
+
 		#endregion
 
 		#region Publics
