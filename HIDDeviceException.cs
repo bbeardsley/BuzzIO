@@ -8,7 +8,10 @@ namespace BuzzWin
     /// </summary>
     public class HIDDeviceException : ApplicationException
     {
-        public HIDDeviceException(string strMessage) : base(strMessage) { }
+        public HIDDeviceException(string strMessage)
+            : base(strMessage)
+        {
+        }
 
         public static HIDDeviceException GenerateWithWinError(string strMessage)
         {
