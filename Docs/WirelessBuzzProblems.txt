@@ -1,0 +1,14 @@
+I've had the same problem with the buzzers not binding. It happens every time.
+ 
+
+The solution I use is:
+ 
+
+Start Buzz - you will get a message that buzzers have not been detected.
+Insert USB dongle into USB port on PS3.
+Hold bind button down on side of dongle until it flashes blue.
+Now push the power button on the buzzer forwards - I find I have to do this 2-3 times and then the buzzer will flash. It should flash 12 times (8 slow followed by 4 quick) If it only flashes 8 times continue until you get 12. Lock the buzzer power switch by pulling it back.
+Next push the bind button down and the blue light will go out.
+The buzzer(s) should now be ready to use.
+
+http://community.eu.playstation.com/t5/Buzz/Wireless-Buzz-Problems/m-p/7190337
