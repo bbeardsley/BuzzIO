@@ -7,18 +7,24 @@ namespace BuzzWin
     /// </summary>
     public abstract class Report
     {
-        #region Member variables
-        /// <summary>Buffer for raw report bytes</summary>
-        private byte[] m_arrBuffer;
-        /// <summary>Length of the report</summary>
-        private int m_nLength;
+        #region Properties
+        /// <summary>
+        /// Buffer for the raw report bytes
+        /// </summary>
+        public byte[] Buffer { get; private set; }
+
+        /// <summary>
+        /// Length of the report
+        /// </summary>
+        public int BufferLength { get; private set; }
+
         #endregion
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="oDev">Constructing device</param>
-        public Report(HIDDevice oDev)
+        protected Report(HIDDevice oDev)
         {
             // Do nothing
         }
@@ -29,29 +35,9 @@ namespace BuzzWin
         /// <param name="arrBytes">Raw report bytes</param>
         protected void SetBuffer(byte[] arrBytes)
         {
-            m_arrBuffer = arrBytes;
-            m_nLength = m_arrBuffer.Length;
+            Buffer = arrBytes;
+            BufferLength = Buffer.Length;
         }
 
-        /// <summary>
-        /// Accessor for the raw byte buffer
-        /// </summary>
-        public byte[] Buffer
-        {
-            get
-            {
-                return m_arrBuffer;
-            }
-        }
-        /// <summary>
-        /// Accessor for the buffer length
-        /// </summary>
-        public int BufferLength
-        {
-            get
-            {
-                return m_nLength;
-            }
-        }
-    }
+	}
 }

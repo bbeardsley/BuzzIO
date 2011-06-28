@@ -26,7 +26,7 @@ namespace BuzzWin
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (Red)
             {
                 if (sb.Length > 0)

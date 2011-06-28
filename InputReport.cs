@@ -3,7 +3,7 @@ using System;
 namespace BuzzWin
 {
     /// <summary>
-    /// Defines a base class for input reports. To use input reports, use the SetData method and override the 
+    /// Defines a base class for input reports. To use input reports, use the SetData method and override the
     /// ProcessData method.
     /// </summary>
     public abstract class InputReport : Report
@@ -12,7 +12,7 @@ namespace BuzzWin
         /// Construction. Do nothing
         /// </summary>
         /// <param name="oDev">Creating device</param>
-        public InputReport(HIDDevice oDev)
+        protected InputReport(HIDDevice oDev)
             : base(oDev)
         {
         }

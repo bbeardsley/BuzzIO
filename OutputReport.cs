@@ -11,7 +11,7 @@ namespace BuzzWin
         /// Construction. Setup the buffer with the correct output report length dictated by the device
         /// </summary>
         /// <param name="oDev">Creating device</param>
-        public OutputReport(HIDDevice oDev)
+        protected OutputReport(HIDDevice oDev)
             : base(oDev)
         {
             SetBuffer(new byte[oDev.OutputReportLength]);

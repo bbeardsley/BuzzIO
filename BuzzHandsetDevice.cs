@@ -39,7 +39,7 @@ namespace BuzzWin
             if (deviceWasRemoved)
                 return;
 
-            BuzzOutputReport oRep = new BuzzOutputReport(this);	// create output report
+            var oRep = new BuzzOutputReport(this);	// create output report
             oRep.SetLightStates(bLight1, bLight2, bLight3, bLight4);	// set the lights states
             try
             {
@@ -58,7 +58,7 @@ namespace BuzzWin
         {
             // VID and PID for Buzz wired device are 0x054c and 0x1000 respectively
             // VID and PID for Buzz wireless device are 0x054c and 2 respectively
-            BuzzHandsetDevice device = (BuzzHandsetDevice)FindDevice(0x054c, 0x1000, typeof(BuzzHandsetDevice));
+            var device = (BuzzHandsetDevice)FindDevice(0x054c, 0x1000, typeof(BuzzHandsetDevice));
             if (device == null)
                 device = (BuzzHandsetDevice)FindDevice(0x054c, 2, typeof(BuzzHandsetDevice));
 
@@ -71,7 +71,7 @@ namespace BuzzWin
         /// <returns>A list of BuzzHandsetDevice instances or empty list if none found.</returns>
         public static List<BuzzHandsetDevice> FindBuzzHandsets()
         {
-            List<BuzzHandsetDevice> list = new List<BuzzHandsetDevice>();
+            var list = new List<BuzzHandsetDevice>();
 
             foreach (HIDDevice device in HIDDevice.FindDevices(0x54c, 0x1000, typeof(BuzzHandsetDevice)))
                 list.Add((BuzzHandsetDevice)device);

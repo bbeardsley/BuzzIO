@@ -11,10 +11,7 @@ namespace BuzzWin
         /// Constructor
         /// </summary>
         /// <param name="oDev">Device constructing this report</param>
-        public BuzzOutputReport(HIDDevice oDev)
-            : base(oDev)
-        {
-        }
+        public BuzzOutputReport(HIDDevice oDev) : base(oDev) {}
 
         /// <summary>
         /// Sets the states of the lights
