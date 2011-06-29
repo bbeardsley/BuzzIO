@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>BuzzIO</id>
-    <version>0.0.0</version>
-    <authors>Ashley Deakin, Brent Beardsley</authors>
-    <owners>Brent Beardsley</owners>
+    <id>$id$</id>
+    <version>$version$</version>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
     <projectUrl>https://github.com/bbeardsley/BuzzIO</projectUrl>
     <iconUrl>https://github.com/bbeardsley/BuzzIO/raw/master/icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Windows interface to Sony PS2/3 Buzz controllers</description>
+    <description>$description$</description>
     <tags>usb sony playstation buzz controllers interface</tags>
   </metadata>
   <files>
