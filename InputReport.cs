@@ -1,6 +1,6 @@
 using System;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Defines a base class for input reports. To use input reports, use the SetData method and override the

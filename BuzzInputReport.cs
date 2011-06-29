@@ -1,6 +1,6 @@
 using System;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Input report for Buzz Handset device

@@ -1,6 +1,6 @@
 using System;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Defines a base class for output reports. To use output reports, just put the bytes into the raw buffer.

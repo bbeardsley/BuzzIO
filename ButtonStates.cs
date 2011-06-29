@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Class which defines the state of the buttons

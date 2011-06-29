@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Generic HID device exception

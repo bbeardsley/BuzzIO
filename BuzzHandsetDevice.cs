@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Class that defines a controller of Buzz handsets : Representation of the USB hardware device

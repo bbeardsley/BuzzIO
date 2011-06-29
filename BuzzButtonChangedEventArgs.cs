@@ -1,6 +1,6 @@
 using System;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Arguments for button changed event

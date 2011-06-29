@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace BuzzWin
+namespace BuzzIO
 {
     /// <summary>
     /// Abstract HID device : Derive your new device controller class from this
