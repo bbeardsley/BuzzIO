@@ -7,6 +7,8 @@ properties {
     $build_dir = "$base_dir\bin\$config\"
     $release_dir = "$base_dir\release\"
     $project = "$base_dir\BuzzIO.csproj"
+    $dll_file = "$build_dir\BuzzIO.dll"
+    $nuspec_file = "$base_dir\BuzzIO.nuspec"
 }
 
 task default -depends Package
@@ -26,6 +28,7 @@ task Build -depends Init {
 }
 
 task Package -depends Build {
-    & $nuget pack $project -Symbols -OutputDirectory $release_dir
+    $version = (dir $dll_file).VersionInfo.FileVersion
+    & $nuget pack $nuspec_file -Symbols -OutputDirectory $release_dir -Version $version
 }
 
