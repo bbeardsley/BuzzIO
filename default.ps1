@@ -25,10 +25,16 @@ task Init -depends Clean {
 
 task Build -depends Init {
     & $msbuild $project /p:OutDir=$build_dir /p:Configuration=$config /p:Platform=$platform
+    if ($LastExitCode -ne 0) {
+        Write-Error "build failed"
+    }
 }
 
 task Package -depends Build {
     $version = (dir $dll_file).VersionInfo.FileVersion
     & $nuget pack $nuspec_file -Symbols -OutputDirectory $release_dir -Version $version
+    if ($LastExitCode -ne 0) {
+        Write-Error "package failed"
+    }
 }
 
