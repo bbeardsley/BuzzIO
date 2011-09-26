@@ -32,7 +32,7 @@ namespace BuzzIO
             public int Size;
             public Guid InterfaceClassGuid;
             public int Flags;
-            public int Reserved;
+            public IntPtr Reserved;
         }
         /// <summary>
         /// Provides the capabilities of a HID device
