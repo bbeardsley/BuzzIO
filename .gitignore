@@ -4,3 +4,5 @@ bin
 obj
 build
 release
+_Resharper.BuzzIO
+*.ReSharper.user
