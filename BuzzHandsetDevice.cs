@@ -1,12 +1,12 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BuzzIO
 {
     /// <summary>
     /// Class that defines a controller of Buzz handsets : Representation of the USB hardware device
     /// </summary>
-    public class BuzzHandsetDevice : HIDDevice
+    public class BuzzHandsetDevice : HIDDevice, IBuzzHandsetDevice
     {
         #region Public attributes/methods
         /// <summary>
@@ -15,17 +15,18 @@ namespace BuzzIO
         public event BuzzButtonChangedEventHandler ButtonChanged;
         protected virtual void OnButtonChanged(BuzzButtonChangedEventArgs e)
         {
-            if (ButtonChanged != null)
-                ButtonChanged(this, e);
+            var handler = ButtonChanged;
+            if (handler != null)
+                handler(this, e);
         }
 
         /// <summary>
         /// Creates an input report for use in the HID device framework
         /// </summary>
         /// <returns>A new input report for this device</returns>
-        public override InputReport CreateInputReport()
+        protected override InputReport CreateInputReport()
         {
-            return new BuzzInputReport(this);
+            return new BuzzInputReport();
         }
         /// <summary>
         /// Sets the states of the handsets lamps on or off.
@@ -33,10 +34,10 @@ namespace BuzzIO
         /// <param name="bLight1">Turn light on handset 1 on/off</param>
         /// <param name="bLight2">Turn light on handset 2 on/off</param>
         /// <param name="bLight3">Turn light on handset 3 on/off</param>
-        /// <param name="bLight3">Turn light on handset 4 on/off</param>
+        /// <param name="bLight4">Turn light on handset 4 on/off</param>
         public void SetLights(bool bLight1, bool bLight2, bool bLight3, bool bLight4)
         {
-            if (deviceWasRemoved)
+            if (_deviceWasRemoved)
                 return;
 
             var oRep = new BuzzOutputReport(this);	// create output report
@@ -45,7 +46,7 @@ namespace BuzzIO
             {
                 Write(oRep); // write the output report
             }
-            catch (Exception)
+            catch
             {
                 // Device may have been removed!
             }
@@ -54,13 +55,12 @@ namespace BuzzIO
         /// Finds the Buzz handset. 
         /// </summary>
         /// <returns>A new BuzzHandsetDevice or null if not found.</returns>
-        public static BuzzHandsetDevice FindBuzzHandset()
+        public static IBuzzHandsetDevice FindBuzzHandset()
         {
             // VID and PID for Buzz wired device are 0x054c and 0x1000 respectively
             // VID and PID for Buzz wireless device are 0x054c and 2 respectively
-            var device = (BuzzHandsetDevice)FindDevice(0x054c, 0x1000, typeof(BuzzHandsetDevice));
-            if (device == null)
-                device = (BuzzHandsetDevice)FindDevice(0x054c, 2, typeof(BuzzHandsetDevice));
+            var device = (IBuzzHandsetDevice)FindDevice(0x054c, 0x1000, typeof(BuzzHandsetDevice)) ??
+                         (IBuzzHandsetDevice)FindDevice(0x054c, 2, typeof(BuzzHandsetDevice));
 
             return device;
         }
@@ -69,16 +69,10 @@ namespace BuzzIO
         /// Finds multiple Buzz handsets.
         /// </summary>
         /// <returns>A list of BuzzHandsetDevice instances or empty list if none found.</returns>
-        public static List<BuzzHandsetDevice> FindBuzzHandsets()
+        public static List<IBuzzHandsetDevice> FindBuzzHandsets()
         {
-            var list = new List<BuzzHandsetDevice>();
-
-            foreach (HIDDevice device in HIDDevice.FindDevices(0x54c, 0x1000, typeof(BuzzHandsetDevice)))
-                list.Add((BuzzHandsetDevice)device);
-
-            foreach (HIDDevice device in HIDDevice.FindDevices(0x54c, 2, typeof(BuzzHandsetDevice)))
-                list.Add((BuzzHandsetDevice)device);
-
+            var list = FindDevices(0x54c, 0x1000, typeof (BuzzHandsetDevice)).Cast<IBuzzHandsetDevice>().ToList();
+            list.AddRange(FindDevices(0x54c, 2, typeof (BuzzHandsetDevice)).Cast<IBuzzHandsetDevice>());
             return list;
         }
 
@@ -94,11 +88,10 @@ namespace BuzzIO
             OnButtonChanged(new BuzzButtonChangedEventArgs(((BuzzInputReport)oInRep).Buttons));
         }
 
-        private bool deviceWasRemoved;
+        private bool _deviceWasRemoved;
         protected override void HandleDeviceRemoved()
         {
-            base.HandleDeviceRemoved();
-            deviceWasRemoved = true;
+            _deviceWasRemoved = true;
         }
 
         /// <summary>

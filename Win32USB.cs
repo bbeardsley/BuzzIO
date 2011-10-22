@@ -181,7 +181,7 @@ namespace BuzzIO
         /// Registers a window for device insert/remove messages
         /// </summary>
         /// <param name="hwnd">Handle to the window that will receive the messages</param>
-        /// <param name="lpInterface">DeviceBroadcastInterrface structure</param>
+        /// <param name="oInterface">DeviceBroadcastInterrface structure</param>
         /// <param name="nFlags">set to DEVICE_NOTIFY_WINDOW_HANDLE</param>
         /// <returns>A handle used when unregistering</returns>
         [DllImport("user32.dll", SetLastError = true)]
@@ -248,11 +248,8 @@ namespace BuzzIO
         /// <returns>A handle used when unregistering</returns>
         public static IntPtr RegisterForUsbEvents(IntPtr hWnd, Guid gClass)
         {
-            DeviceBroadcastInterface oInterfaceIn = new DeviceBroadcastInterface();
+            var oInterfaceIn = new DeviceBroadcastInterface {ClassGuid = gClass, DeviceType = DEVTYP_DEVICEINTERFACE, Reserved = 0};
             oInterfaceIn.Size = Marshal.SizeOf(oInterfaceIn);
-            oInterfaceIn.ClassGuid = gClass;
-            oInterfaceIn.DeviceType = DEVTYP_DEVICEINTERFACE;
-            oInterfaceIn.Reserved = 0;
             return RegisterDeviceNotification(hWnd, oInterfaceIn, DEVICE_NOTIFY_WINDOW_HANDLE);
         }
         /// <summary>

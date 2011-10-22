@@ -1,5 +1,3 @@
-using System;
-
 namespace BuzzIO
 {
     /// <summary>
@@ -8,7 +6,7 @@ namespace BuzzIO
     public class BuzzInputReport : InputReport
     {
         /// <summary>Number of handsets</summary>
-        public const int NUM_HANDSETS = 4;
+        public const int NumHandsets = 4;
 
         /// <summary>
         /// Decoded button states
@@ -18,12 +16,11 @@ namespace BuzzIO
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="oDev">Constructing device</param>
-        public BuzzInputReport(HIDDevice oDev) : base(oDev)
+        public BuzzInputReport()
         {
             // Create the button states
-            Buttons = new ButtonStates[NUM_HANDSETS];
-            for (int i = 0; i < NUM_HANDSETS; i++)
+            Buttons = new ButtonStates[NumHandsets];
+            for (var i = 0; i < NumHandsets; i++)
                 Buttons[i] = new ButtonStates();
         }
         /// <summary>
@@ -31,7 +28,7 @@ namespace BuzzIO
         /// </summary>
         public override void ProcessData()
         {
-            byte[] arrData = Buffer;
+            var arrData = Buffer;
             Buttons[0].Red = ((arrData[3] & 0x01) != 0);
             Buttons[0].Yellow = ((arrData[3] & 0x02) != 0);
             Buttons[0].Green = ((arrData[3] & 0x04) != 0);

@@ -1,5 +1,3 @@
-using System;
-
 namespace BuzzIO
 {
     /// <summary>
@@ -19,15 +17,6 @@ namespace BuzzIO
         public int BufferLength { get; private set; }
 
         #endregion
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="oDev">Constructing device</param>
-        protected Report(HIDDevice oDev)
-        {
-            // Do nothing
-        }
 
         /// <summary>
         /// Sets the raw byte array.

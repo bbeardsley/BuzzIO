@@ -1,5 +1,3 @@
-using System;
-
 namespace BuzzIO
 {
     /// <summary>
@@ -11,7 +9,10 @@ namespace BuzzIO
         /// Constructor
         /// </summary>
         /// <param name="oDev">Device constructing this report</param>
-        public BuzzOutputReport(HIDDevice oDev) : base(oDev) {}
+        public BuzzOutputReport(HIDDevice oDev)
+            : base(oDev)
+        {
+        }
 
         /// <summary>
         /// Sets the states of the lights
@@ -22,7 +23,7 @@ namespace BuzzIO
         /// <param name="bLight4">State of light on handset 4</param>
         public void SetLightStates(bool bLight1, bool bLight2, bool bLight3, bool bLight4)
         {
-            byte[] arrBuff = Buffer;
+            var arrBuff = Buffer;
             arrBuff[2] = (byte)(bLight1 ? 0xff : 0);
             arrBuff[3] = (byte)(bLight2 ? 0xff : 0);
             arrBuff[4] = (byte)(bLight3 ? 0xff : 0);

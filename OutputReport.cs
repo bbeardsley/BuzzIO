@@ -1,5 +1,3 @@
-using System;
-
 namespace BuzzIO
 {
     /// <summary>
@@ -12,7 +10,6 @@ namespace BuzzIO
         /// </summary>
         /// <param name="oDev">Creating device</param>
         protected OutputReport(HIDDevice oDev)
-            : base(oDev)
         {
             SetBuffer(new byte[oDev.OutputReportLength]);
         }

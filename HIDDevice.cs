@@ -105,7 +105,7 @@ namespace BuzzIO
         {
             var arrInputReport = new byte[InputReportLength];
             // put the buff we used to receive the stuff as the async state then we can get at it when the read completes
-            _file.BeginRead(arrInputReport, 0, InputReportLength, new AsyncCallback(ReadCompleted), arrInputReport);
+            _file.BeginRead(arrInputReport, 0, InputReportLength, ReadCompleted, arrInputReport);
         }
         /// <summary>
         /// Callback for above. Care with this as it will be called on the background thread from the async read
@@ -152,21 +152,25 @@ namespace BuzzIO
                 _handle = IntPtr.Zero;
             }
         }
+
         /// <summary>
         /// virtual handler for any action to be taken when data is received. Override to use.
         /// </summary>
         /// <param name="oInRep">The input report that was received</param>
-        protected virtual void HandleDataReceived(InputReport oInRep)
-        {
-        }
+        protected abstract void HandleDataReceived(InputReport oInRep);
 
         /// <summary>
         /// Virtual handler for any action to be taken when a device is removed. Override to use.
         /// </summary>
-        protected virtual void HandleDeviceRemoved()
-        {
-        }
+        protected abstract void HandleDeviceRemoved();
+
         /// <summary>
+        /// Virtual method to create an input report for this device. Override to use.
+        /// </summary>
+        /// <returns>A shiny new input report</returns>
+        protected abstract InputReport CreateInputReport();
+
+            /// <summary>
         /// Helper method to return the device path given a DeviceInterfaceData structure and an InfoSet handle.
         /// Used in 'FindDevice' so check that method out to see how to get an InfoSet handle and a DeviceInterfaceData.
         /// </summary>
@@ -201,8 +205,7 @@ namespace BuzzIO
         /// <returns>A new device class of the given type or null</returns>
         public static HIDDevice FindDevice(int nVid, int nPid, Type oType)
         {
-            string strPath = string.Empty;
-            string strSearch = string.Format("vid_{0:x4}&pid_{1:x4}", nVid, nPid); // first, build the path search string
+            var searchPath = GetSearchPath(nVid, nPid); // first, build the path search string
             Guid gHid;
             HidD_GetHidGuid(out gHid);	// next, get the GUID from Windows that it uses to represent the HID USB interface
             var hInfoSet = SetupDiGetClassDevs(ref gHid, null, IntPtr.Zero, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);	// this gets a list of all HID devices currently connected to the computer (InfoSet)
@@ -212,15 +215,15 @@ namespace BuzzIO
                 oInterface.Size = Marshal.SizeOf(oInterface);
                 // Now iterate through the InfoSet memory block assigned within Windows in the call to SetupDiGetClassDevs
                 // to get device details for each device connected
-                for (int i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'i' in the memory block
+                for (var i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'i' in the memory block
                 {
                     var strDevicePath = GetDevicePath(hInfoSet, ref oInterface);	// get the device path (see helper method 'GetDevicePath')
-                    if (strDevicePath.IndexOf(strSearch) >= 0)	// do a string search, if we find the VID/PID string then we found our device!
-                    {
-                        var oNewDevice = (HIDDevice)Activator.CreateInstance(oType);	// create an instance of the class for this device
-                        oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
-                        return oNewDevice;	// and return it
-                    }
+                    if (strDevicePath.IndexOf(searchPath) < 0)
+                        continue;
+
+                    var oNewDevice = (HIDDevice)Activator.CreateInstance(oType);	// create an instance of the class for this device
+                    oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
+                    return oNewDevice;	// and return it
                 }
             }
             finally
@@ -234,8 +237,7 @@ namespace BuzzIO
         public static List<HIDDevice> FindDevices(int nVid, int nPid, Type oType)
         {
             var list = new List<HIDDevice>();
-            string strPath = string.Empty;
-            string strSearch = string.Format("vid_{0:x4}&pid_{1:x4}", nVid, nPid); // first, build the path search string
+            var searchPath = GetSearchPath(nVid, nPid); // first, build the path search string
             Guid gHid;
             HidD_GetHidGuid(out gHid);	// next, get the GUID from Windows that it uses to represent the HID USB interface
             var hInfoSet = SetupDiGetClassDevs(ref gHid, null, IntPtr.Zero, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);	// this gets a list of all HID devices currently connected to the computer (InfoSet)
@@ -245,20 +247,20 @@ namespace BuzzIO
                 oInterface.Size = Marshal.SizeOf(oInterface);
                 // Now iterate through the InfoSet memory block assigned within Windows in the call to SetupDiGetClassDevs
                 // to get device details for each device connected
-                for (int i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'nIndex' in the memory block
+                for (var i = 0; SetupDiEnumDeviceInterfaces(hInfoSet, 0, ref gHid, (uint)i, ref oInterface); i++)	// this gets the device interface information for a device at index 'nIndex' in the memory block
                 {
                     var strDevicePath = GetDevicePath(hInfoSet, ref oInterface);	// get the device path (see helper method 'GetDevicePath')
-                    if (strDevicePath.IndexOf(strSearch) >= 0)	// do a string search, if we find the VID/PID string then we found our device!
+                    if (strDevicePath.IndexOf(searchPath) < 0)
+                        continue;
+
+                    var oNewDevice = (HIDDevice)Activator.CreateInstance(oType);	// create an instance of the class for this device
+                    try
                     {
-                        var oNewDevice = (HIDDevice)Activator.CreateInstance(oType);	// create an instance of the class for this device
-                        try
-                        {
-                            oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
-                            list.Add(oNewDevice);
-                        }
-                        catch (Exception)
-                        {
-                        }
+                        oNewDevice.Initialise(strDevicePath);	// initialise it with the device path
+                        list.Add(oNewDevice);
+                    }
+                    catch
+                    {
                     }
                 }
             }
@@ -270,9 +272,14 @@ namespace BuzzIO
             return list;
         }
 
+        private static string GetSearchPath(int nVid, int nPid)
+        {
+            return string.Format("vid_{0:x4}&pid_{1:x4}", nVid, nPid);
+        }
+
         #endregion
 
-        #region Publics
+        #region Events
         /// <summary>
         /// Event handler called when device has been removed
         /// </summary>
@@ -283,14 +290,6 @@ namespace BuzzIO
                 DeviceRemoved(this, e);
         }
 
-        /// <summary>
-        /// Virtual method to create an input report for this device. Override to use.
-        /// </summary>
-        /// <returns>A shiny new input report</returns>
-        public virtual InputReport CreateInputReport()
-        {
-            return null;
-        }
         #endregion
     }
 }

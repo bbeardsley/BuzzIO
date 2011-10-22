@@ -98,17 +98,22 @@
     <Compile Include="BuzzHandsetDevice.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="BuzzHandsetFinder.cs" />
     <Compile Include="BuzzInputReport.cs" />
     <Compile Include="BuzzOutputReport.cs" />
     <Compile Include="HIDDevice.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HIDDeviceException.cs" />
+    <Compile Include="IBuzzHandsetDevice.cs" />
+    <Compile Include="IBuzzHandsetFinder.cs" />
     <Compile Include="InputReport.cs" />
+    <Compile Include="IUsbEventService.cs" />
     <Compile Include="OutputReport.cs" />
     <Compile Include="Report.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="UsbEventService.cs" />
     <Compile Include="Win32USB.cs">
       <SubType>Code</SubType>
     </Compile>

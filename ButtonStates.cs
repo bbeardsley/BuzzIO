@@ -1,4 +1,5 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace BuzzIO
@@ -26,43 +27,23 @@ namespace BuzzIO
 
         public override string ToString()
         {
-            var sb = new StringBuilder();
+            var list = new List<string>();
             if (Red)
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append("Red");
-            }
+                list.Add("Red");
 
             if (Blue)
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append("Blue");
-            }
+                list.Add("Blue");
 
             if (Orange)
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append("Orange");
-            }
+                list.Add("Orange");
 
             if (Green)
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append("Green");
-            }
+                list.Add("Green");
 
             if (Yellow)
-            {
-                if (sb.Length > 0)
-                    sb.Append(", ");
-                sb.Append("Yellow");
-            }
+                list.Add("Yellow");
 
-            return sb.ToString();
+            return string.Join(", ", list);
         }
     }
 }

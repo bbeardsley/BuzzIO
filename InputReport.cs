@@ -1,5 +1,3 @@
-using System;
-
 namespace BuzzIO
 {
     /// <summary>
@@ -8,14 +6,6 @@ namespace BuzzIO
     /// </summary>
     public abstract class InputReport : Report
     {
-        /// <summary>
-        /// Construction. Do nothing
-        /// </summary>
-        /// <param name="oDev">Creating device</param>
-        protected InputReport(HIDDevice oDev)
-            : base(oDev)
-        {
-        }
         /// <summary>
         /// Call this to set the buffer given a raw input report. Calls an overridable method to
         /// should automatically parse the bytes into meaningul structures.
