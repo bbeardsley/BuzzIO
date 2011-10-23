@@ -12,8 +12,7 @@
     <tags>usb sony playstation buzz controllers interface</tags>
   </metadata>
   <files>
-    <file src="build\BuzzIO.dll" target="lib" />
-    <file src="build\BuzzIO.pdb" target="lib" />
+    <file src="bin\release\BuzzIO.dll" target="lib\net20" />
     <file src="*.cs" target="src" />
     <file src="BuzzIO.csproj" target="src" />
   </files>

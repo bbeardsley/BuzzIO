@@ -1,8 +1,8 @@
 properties {
     $base_dir = resolve-path .
-    $nuget = "$base_dir\packages\Nuget.CommandLine.1.4.20615.182\tools\Nuget.exe"
+    $nuget = "$base_dir\packages\Nuget.CommandLine.1.5.21005.9019\tools\Nuget.exe"
     $msbuild = "$env:WINDIR\Microsoft.NET\Framework\v4.0.30319\msbuild.exe"
-    $config = 'Debug'
+    $config = 'Release'
     $platform = 'AnyCPU'
     $build_dir = "$base_dir\bin\$config\"
     $release_dir = "$base_dir\release\"
