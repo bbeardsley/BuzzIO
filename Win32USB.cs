@@ -216,6 +216,7 @@ namespace BuzzIO
         /// <returns>True if successful</returns>
         [DllImport("hid.dll", SetLastError = true)]
         protected static extern int HidP_GetCaps(IntPtr lpData, out HidCaps oCaps);
+
         /// <summary>
         /// Creates/opens a file, serial port, USB device... etc
         /// </summary>
@@ -229,6 +230,7 @@ namespace BuzzIO
         /// <returns></returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         protected static extern IntPtr CreateFile([MarshalAs(UnmanagedType.LPStr)] string strName, uint nAccess, uint nShareMode, IntPtr lpSecurity, uint nCreationFlags, uint nAttributes, IntPtr lpTemplate);
+
         /// <summary>
         /// Closes a window handle. File handles, event handles, mutex handles... etc
         /// </summary>
@@ -236,7 +238,14 @@ namespace BuzzIO
         /// <returns>True if successful.</returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         protected static extern int CloseHandle(IntPtr hFile);
-        #endregion
+
+        [DllImport("hid.dll", SetLastError = true, CallingConvention = CallingConvention.StdCall)]
+        internal static extern bool HidD_GetProductString(
+           IntPtr hDevice,
+           IntPtr buffer,
+           uint bufferLength);
+
+        #endregion P/Invoke
 
         #region Public methods
         /// <summary>

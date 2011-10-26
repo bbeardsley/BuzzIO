@@ -27,6 +27,11 @@ namespace BuzzIO
         /// </summary>
         public int InputReportLength { get; private set; }
 
+        /// <summary>
+        /// Product name
+        /// </summary>
+        public string ProductString { get; private set; }
+
         #endregion Properties
 
         #region IDisposable Members
@@ -74,6 +79,10 @@ namespace BuzzIO
                 {
                     try
                     {
+                        var buffer = Marshal.AllocHGlobal(126);//max alloc for string;
+                        ProductString = HidD_GetProductString(_handle, buffer, 126) ? Marshal.PtrToStringAuto(buffer) : string.Empty;
+                        Marshal.FreeHGlobal(buffer); 
+
                         HidCaps oCaps;
                         HidP_GetCaps(lpData, out oCaps);	// extract the device capabilities from the internal buffer
                         InputReportLength = oCaps.InputReportByteLength;	// get the input...

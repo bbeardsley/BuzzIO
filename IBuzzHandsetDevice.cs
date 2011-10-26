@@ -23,6 +23,6 @@ namespace BuzzIO
         /// </summary>
         event EventHandler DeviceRemoved;
 
-
+        string ProductString { get; }
     }
 }
