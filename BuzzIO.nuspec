@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>BuzzIO</id>
-    <version>0.0.0.0</version>
+    <version>$version$</version>
     <authors>Ashley Deakin,Brent Beardsley</authors>
     <owners>Brent Beardsley</owners>
     <projectUrl>https://github.com/bbeardsley/BuzzIO</projectUrl>
