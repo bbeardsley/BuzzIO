@@ -2,6 +2,11 @@
 
 ![Buzz Controller](https://github.com/bbeardsley/BuzzIO/raw/master/icon.png) This is a C# library to use Sony PS2 Buzz controllers in Windows.
 
+## Usage
+```C#
+var handsets = new BuzzHandsetFinder().FindHandsets().ToList();
+```
+
 ## Links
 - [BuzzIO in nuget gallery](http://nuget.org/packages/BuzzIO)
 - [Working with USB devices in .NET and C#](http://www.developerfusion.com/article/84338/making-usb-c-friendly/): Inspiration and start of this library
