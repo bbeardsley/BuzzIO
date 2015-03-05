@@ -1,5 +1,8 @@
 # BuzzIO
 
+[![Build Status]][Appveyor]
+
+## What Is It?
 ![Buzz Controller](https://github.com/bbeardsley/BuzzIO/raw/master/icon.png) This is a C# library to use Sony PS2 Buzz controllers in Windows.
 
 ## Usage
