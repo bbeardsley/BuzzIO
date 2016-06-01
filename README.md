@@ -1,6 +1,6 @@
 # BuzzIO
 
-[![Nuget](https://img.shields.io/nuget/dt/BuzzIO.svg)](https://nuget.org/packages/BuzzIO)
+[![Nuget](https://img.shields.io/nuget/v/BuzzIO.svg)](https://nuget.org/packages/BuzzIO)
 [![Build Status](https://img.shields.io/appveyor/ci/bbeardsley/BuzzIO.svg)](https://ci.appveyor.com/project/bbeardsley/BuzzIO/history)
 
 ## What Is It?
